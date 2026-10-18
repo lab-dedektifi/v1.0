@@ -6,8 +6,8 @@
     <title>Lab Dedektifi - Ultimate Profesyonel Kimya Laboratuvarı</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #131c2e;
+            --bg-color: #080c14;
+            --card-bg: #101726;
             --text-color: #f1f5f9;
             --text-muted: #94a3b8;
             --primary: #2563eb;
@@ -15,7 +15,7 @@
             --border-color: #1e293b;
             --danger: #ef4444;
             --success: #22c55e;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
             --radius: 12px;
         }
 
@@ -57,7 +57,7 @@
 
         .main-layout {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 2.1fr 1fr;
             gap: 0.75rem;
             flex: 1;
         }
@@ -79,8 +79,8 @@
 
         canvas {
             width: 100%;
-            height: 420px;
-            background: #05080f;
+            height: 480px;
+            background: #04060a;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             cursor: pointer;
@@ -88,17 +88,17 @@
 
         .shelf-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 0.5rem;
-            max-height: 240px;
+            max-height: 220px;
             overflow-y: auto;
         }
 
         .chemical-btn {
-            background: #1e293b;
+            background: #192235;
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            padding: 0.5rem;
+            padding: 0.4rem 0.5rem;
             border-radius: 8px;
             cursor: pointer;
             font-size: 0.75rem;
@@ -107,13 +107,12 @@
             transition: all 0.2s;
             display: flex;
             flex-direction: column;
-            gap: 0.2rem;
-            position: relative;
+            gap: 0.15rem;
         }
 
         .chemical-btn:hover {
             border-color: var(--accent);
-            background: #253348;
+            background: #22304a;
         }
 
         .chemical-btn.selected {
@@ -123,9 +122,9 @@
         }
 
         .ph-badge {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             background: rgba(0,0,0,0.4);
-            padding: 0.1rem 0.3rem;
+            padding: 0.05rem 0.25rem;
             border-radius: 4px;
             width: fit-content;
             color: var(--accent);
@@ -133,18 +132,18 @@
 
         .tools-bar {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             flex-wrap: wrap;
         }
 
         .tool-btn {
-            background: #1e293b;
+            background: #192235;
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            padding: 0.5rem 0.75rem;
+            padding: 0.4rem 0.6rem;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             transition: all 0.2s;
         }
@@ -160,9 +159,9 @@
             background: #000;
             color: #4ade80;
             font-family: monospace;
-            padding: 0.6rem 1rem;
+            padding: 0.5rem 1rem;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             border: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
@@ -192,6 +191,17 @@
 
         table.notebook th { color: var(--text-muted); }
 
+        .btn-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
         .btn-danger {
             background: var(--danger);
             color: white;
@@ -214,8 +224,9 @@
 <body>
 
     <header>
-        <h1>🧪 Lab Dedektifi <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">[Ultimate Sandbox Kimya]</span></h1>
+        <h1>🧪 Lab Dedektifi <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">[Ultimate Sandbox Kimya v3]</span></h1>
         <div class="flex-row">
+            <button class="btn-action" onclick="LabSim.addBeaker()">➕ Yeni Beher Ekle</button>
             <button class="btn-danger" onclick="LabSim.resetAll()">Masayı Sıfırla</button>
         </div>
     </header>
@@ -226,14 +237,17 @@
             <div class="flex-row">
                 <span style="font-size: 0.9rem; font-weight: 600;">Çalışma Tezgahı</span>
                 <div class="tools-bar">
-                    <button class="tool-btn active" id="t_pipette" onclick="LabSim.setTool('pipette')">Pipet (Sıvı Ekle)</button>
-                    <button class="tool-btn" id="t_ph" onclick="LabSim.setTool('ph')">pH Metre Prob</button>
+                    <button class="tool-btn active" id="t_pipette" onclick="LabSim.setTool('pipette')">Pipet</button>
+                    <button class="tool-btn" id="t_ph" onclick="LabSim.setTool('ph')">pH Prob</button>
                     <button class="tool-btn" id="t_temp" onclick="LabSim.setTool('temp')">Termometre</button>
-                    <button class="tool-btn" id="t_heat" onclick="LabSim.setTool('heat')">Bunsen Ocağı</button>
+                    <button class="tool-btn" id="t_heat" onclick="LabSim.setTool('heat')">Ocak (Isıt)</button>
+                    <button class="tool-btn" id="t_cool" onclick="LabSim.setTool('cool')">Soğutucu Banyo</button>
+                    <button class="tool-btn" id="t_cond" onclick="LabSim.setTool('cond')">Damıtma Kolonu</button>
+                    <button class="tool-btn" id="t_empty" onclick="LabSim.setTool('empty')">İçini Boşalt</button>
                 </div>
             </div>
 
-            <canvas id="labCanvas" width="750" height="420"></canvas>
+            <canvas id="labCanvas" width="750" height="500"></canvas>
 
             <div class="instrument-display">
                 <span id="instrumentName">Seçili Araç: Pipet</span>
@@ -243,16 +257,16 @@
 
         <!-- Sağ Panel: Raf ve Asistan -->
         <div class="panel">
-            <span style="font-size: 0.9rem; font-weight: 600;">Kimyasal & Reaktif Rafı (pH Değerleri İle)</span>
+            <span style="font-size: 0.9rem; font-weight: 600;">Reaktif Rafı (Sıvı & Katılar)</span>
             <div class="shelf-grid" id="chemicalShelf"></div>
 
             <span style="font-size: 0.9rem; font-weight: 600; margin-top: 0.25rem;">🤖 Lab Asistanı</span>
             <div class="ai-box" id="aiNotes">
-                Laboratuvara hoş geldin! Sağdaki raftan istediğin maddeyi seç, araç çubuğundan termometre veya pH metre alarak imleçle beherlere dök ya da ölç.
+                Hoş geldin! Üst menüden yeni beher ekleyebilir, maddelerin kaynama noktalarına göre ısınmasını ve Bunsen ocağını kapattığında Newton kanunuyla soğumasını gözlemleyebilirsin.
             </div>
 
             <span style="font-size: 0.9rem; font-weight: 600;">📓 Deney Defteri</span>
-            <div style="max-height: 110px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.25rem;">
+            <div style="max-height: 120px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.25rem;">
                 <table class="notebook" id="notebookTable">
                     <thead>
                         <tr><th>Beher</th><th>İçerik</th><th>pH</th><th>Sıcaklık</th></tr>
@@ -264,19 +278,18 @@
     </div>
 
     <script>
-        const Chemicals = {
-            water: { name: 'Saf Su (H₂O)', pH: 7.0, color: '#38bdf8', H: 1e-7, OH: 1e-7 },
-            hcl: { name: 'Kuvvetli Asit (HCl)', pH: 1.0, color: '#f87171', H: 0.1, OH: 0 },
-            h2so4: { name: 'Sülfürik Asit', pH: 0.5, color: '#ef4444', H: 0.2, OH: 0 },
-            vinegar: { name: 'Sirke', pH: 2.9, color: '#fb923c', H: 0.001, OH: 0 },
-            lemon: { name: 'Limon Suyu', pH: 2.3, color: '#facc15', H: 0.005, OH: 0 },
-            naoh: { name: 'Kuvvetli Baz (NaOH)', pH: 13.0, color: '#4ade80', H: 0, OH: 0.1 },
-            ammonia: { name: 'Amonyak', pH: 11.1, color: '#34d399', H: 0, OH: 0.001 },
-            baking_soda: { name: 'Karbonat', pH: 8.4, color: '#2dd4bf', H: 0, OH: 1e-5 },
-            salt: { name: 'Tuzlu Su', pH: 7.0, color: '#93c5fd', H: 1e-7, OH: 1e-7 },
-            cabbage: { name: 'Kırmızı Lahana', pH: 7.0, color: '#a855f7', H: 1e-7, OH: 1e-7 },
-            phenolphthalein: { name: 'Fenolftalein', pH: 7.0, color: 'transparent', H: 1e-7, OH: 1e-7 },
-            methyl_orange: { name: 'Metil Oranj', pH: 7.0, color: '#f97316', H: 1e-7, OH: 1e-7 }
+        const Materials = {
+            water: { name: 'Saf Su (H₂O)', type: 'liquid', pH: 7.0, color: '#38bdf8', boilingPoint: 100, heatCapacity: 4.18, density: 1.0, H: 1e-7, OH: 1e-7 },
+            hcl: { name: 'Kuvvetli Asit (HCl)', type: 'liquid', pH: 1.0, color: '#f87171', boilingPoint: 108.5, heatCapacity: 3.9, density: 1.1, H: 0.1, OH: 0 },
+            vinegar: { name: 'Sirke (Asetik Asit)', type: 'liquid', pH: 2.9, color: '#fb923c', boilingPoint: 118.1, heatCapacity: 4.1, density: 1.05, H: 0.001, OH: 0 },
+            lemon: { name: 'Limon Suyu', type: 'liquid', pH: 2.3, color: '#facc15', boilingPoint: 101.0, heatCapacity: 4.0, density: 1.03, H: 0.005, OH: 0 },
+            naoh: { name: 'Kuvvetli Baz (NaOH)', type: 'liquid', pH: 13.0, color: '#4ade80', boilingPoint: 105.0, heatCapacity: 3.8, density: 1.15, H: 0, OH: 0.1 },
+            ammonia: { name: 'Amonyak', type: 'liquid', pH: 11.1, color: '#34d399', boilingPoint: 37.7, heatCapacity: 4.5, density: 0.9, H: 0, OH: 0.001 },
+            salt: { name: 'Sofra Tuzu (NaCl)', type: 'solid', pH: 7.0, color: '#ffffff', boilingPoint: 1465, heatCapacity: 0.85, density: 2.16, H: 1e-7, OH: 1e-7 },
+            copper_sulfate: { name: 'Bakır(II) Sülfat (Katı)', type: 'solid', pH: 4.0, color: '#2563eb', boilingPoint: 650, heatCapacity: 0.7, density: 3.6, H: 1e-4, OH: 1e-10 },
+            baking_soda: { name: 'Kabartma Tozu', type: 'solid', pH: 8.4, color: '#cbd5e1', boilingPoint: 270, heatCapacity: 1.0, density: 2.2, H: 0, OH: 1e-5 },
+            cabbage: { name: 'Kırmızı Lahana', type: 'liquid', pH: 7.0, color: '#a855f7', boilingPoint: 100, heatCapacity: 4.18, density: 1.0, H: 1e-7, OH: 1e-7 },
+            phenolphthalein: { name: 'Fenolftalein', type: 'liquid', pH: 7.0, color: 'transparent', boilingPoint: 250, heatCapacity: 2.0, density: 0.95, H: 1e-7, OH: 1e-7 }
         };
 
         const LabSim = {
@@ -285,9 +298,9 @@
             mouseX: 0,
             mouseY: 0,
             beakers: [
-                { id: 1, x: 160, y: 260, volume: 50, maxVol: 100, temp: 22, heating: false, contents: { water: 50 } },
-                { id: 2, x: 375, y: 260, volume: 50, maxVol: 100, temp: 22, heating: false, contents: { hcl: 50 } },
-                { id: 3, x: 590, y: 260, volume: 50, maxVol: 100, temp: 22, heating: false, contents: { naoh: 50 } }
+                { id: 1, x: 150, y: 300, volume: 60, maxVol: 100, temp: 22, heating: false, cooling: false, condenser: false, contents: { water: 60 } },
+                { id: 2, x: 375, y: 300, volume: 60, maxVol: 100, temp: 22, heating: false, cooling: false, condenser: false, contents: { hcl: 60 } },
+                { id: 3, x: 600, y: 300, volume: 60, maxVol: 100, temp: 22, heating: false, cooling: false, condenser: false, contents: { naoh: 60 } }
             ],
             particles: [],
 
@@ -311,24 +324,38 @@
                 this.startLoop();
             },
 
+            addBeaker() {
+                if (this.beakers.length >= 5) {
+                    alert("Masada maksimum 5 beher bulunabilir.");
+                    return;
+                }
+                let newId = this.beakers.length > 0 ? Math.max(...this.beakers.map(b => b.id)) + 1 : 1;
+                let spacing = 750 / (this.beakers.length + 2);
+                let newX = spacing * (this.beakers.length + 1);
+                this.beakers.push({
+                    id: newId, x: newX, y: 300, volume: 0, maxVol: 100, temp: 22, heating: false, cooling: false, condenser: false, contents: {}
+                });
+                document.getElementById('aiNotes').innerHTML = `Beher #${newId} masaya eklendi.`;
+            },
+
             renderShelf() {
                 const shelf = document.getElementById('chemicalShelf');
                 shelf.innerHTML = '';
-                Object.keys(Chemicals).forEach(key => {
-                    let chem = Chemicals[key];
+                Object.keys(Materials).forEach(key => {
+                    let mat = Materials[key];
                     let btn = document.createElement('div');
                     btn.className = `chemical-btn ${key === this.selectedKey ? 'selected' : ''}`;
                     btn.innerHTML = `
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="width:10px; height:10px; background:${chem.color === 'transparent' ? '#ccc' : chem.color}; display:inline-block; border-radius:2px;"></span>
-                            <b>${chem.name}</b>
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <span style="width:10px; height:10px; background:${mat.color === 'transparent' ? '#64748b' : mat.color}; display:inline-block; border-radius:2px;"></span>
+                            <b>${mat.name}</b>
                         </div>
-                        <span class="ph-badge">pH: ~${chem.pH}</span>
+                        <span class="ph-badge">pH: ~${mat.pH} | Kaynama: ${mat.boilingPoint}°C</span>
                     `;
                     btn.onclick = () => {
                         this.selectedKey = key;
                         this.renderShelf();
-                        document.getElementById('aiNotes').innerHTML = `Seçildi: <b>${chem.name}</b> (pH: ${chem.pH})`;
+                        document.getElementById('aiNotes').innerHTML = `Seçildi: <b>${mat.name}</b>`;
                     };
                     shelf.appendChild(btn);
                 });
@@ -336,10 +363,14 @@
 
             setTool(tool) {
                 this.activeTool = tool;
-                ['pipette', 'ph', 'temp', 'heat'].forEach(t => {
-                    document.getElementById('t_' + t).classList.toggle('active', t === tool);
+                ['pipette', 'ph', 'temp', 'heat', 'cool', 'cond', 'empty'].forEach(t => {
+                    let el = document.getElementById('t_' + t);
+                    if (el) el.classList.toggle('active', t === tool);
                 });
-                let names = { pipette: 'Pipet (Sıvı Ekleme)', ph: 'pH Metre Probu', temp: 'Termometre', heat: 'Bunsen Ocağı' };
+                let names = { 
+                    pipette: 'Pipet (Madde Ekle)', ph: 'pH Metre Probu', temp: 'Termometre', 
+                    heat: 'Bunsen Ocağı (Isıtıcı)', cool: 'Soğutucu Banyo', cond: 'Damıtma Kolonu', empty: 'İçini Boşalt' 
+                };
                 document.getElementById('instrumentName').innerText = `Seçili Araç: ${names[tool]}`;
                 document.getElementById('instrumentValue').innerText = '--';
             },
@@ -347,27 +378,42 @@
             handleCanvasClick(x, y) {
                 this.beakers.forEach(b => {
                     let dist = Math.hypot(x - b.x, y - b.y);
-                    if (dist < 55) {
+                    if (dist < 60) {
                         if (this.activeTool === 'pipette') {
                             if (b.volume < b.maxVol) {
                                 b.volume += 15;
                                 b.contents[this.selectedKey] = (b.contents[this.selectedKey] || 0) + 15;
-                                b.temp += 0.4;
+                                b.temp += 0.3; // küçük ısı tepkimesi
                                 for(let i=0; i<6; i++) {
-                                    this.particles.push({ x: b.x + (Math.random()-0.5)*20, y: b.y - 40, vy: 2 + Math.random()*2, color: Chemicals[this.selectedKey].color });
+                                    this.particles.push({ x: b.x + (Math.random()-0.5)*20, y: b.y - 50, vy: 2 + Math.random()*2, color: Materials[this.selectedKey].color === 'transparent' ? '#cbd5e1' : Materials[this.selectedKey].color });
                                 }
                                 this.updateNotebook(b);
                             }
                         } else if (this.activeTool === 'ph') {
                             let res = this.calcChemistry(b);
                             document.getElementById('instrumentValue').innerText = `pH: ${res.pH} (${res.desc})`;
-                            document.getElementById('aiNotes').innerHTML = `Beher #${b.id} Ölçümü: pH = <b>${res.pH}</b> (${res.desc})`;
+                            document.getElementById('aiNotes').innerHTML = `Beher #${b.id} pH Ölçümü: <b>${res.pH}</b> (${res.desc})`;
                         } else if (this.activeTool === 'temp') {
                             document.getElementById('instrumentValue').innerText = `${b.temp.toFixed(1)} °C`;
                             document.getElementById('aiNotes').innerHTML = `Beher #${b.id} Sıcaklık: <b>${b.temp.toFixed(1)} °C</b>`;
                         } else if (this.activeTool === 'heat') {
                             b.heating = !b.heating;
-                            document.getElementById('aiNotes').innerHTML = `Beher #${b.id} için Bunsen ocağı ${b.heating ? 'AÇILDI 🔥' : 'KAPATILDI 🛑'}.`;
+                            if (b.heating) b.cooling = false; // Isıtıcı açılınca soğutucu kapanır
+                            document.getElementById('aiNotes').innerHTML = `Beher #${b.id} Ocak ${b.heating ? 'AÇILDI 🔥' : 'KAPATILDI'}.`;
+                        } else if (this.activeTool === 'cool') {
+                            b.cooling = !b.cooling;
+                            if (b.cooling) b.heating = false;
+                            document.getElementById('aiNotes').innerHTML = `Beher #${b.id} Soğutucu banyo ${b.cooling ? 'AKTİF 🧊' : 'KAPATILDI'}.`;
+                        } else if (this.activeTool === 'cond') {
+                            b.condenser = !b.condenser;
+                            document.getElementById('aiNotes').innerHTML = `Beher #${b.id} Damıtma kolonu ${b.condenser ? 'EKLENDİ 🧪' : 'KALDIRILDI'}.`;
+                        } else if (this.activeTool === 'empty') {
+                            b.volume = 0;
+                            b.contents = {};
+                            b.temp = 22;
+                            b.heating = false;
+                            b.cooling = false;
+                            document.getElementById('aiNotes').innerHTML = `Beher #${b.id} içi tamamen boşaltıldı.`;
                         }
                     }
                 });
@@ -377,15 +423,14 @@
                 let totalVol = 0, totalH = 0, totalOH = 0;
                 let hasCabbage = (b.contents['cabbage'] || 0) > 0;
                 let hasPhenol = (b.contents['phenolphthalein'] || 0) > 0;
-                let hasMethyl = (b.contents['methyl_orange'] || 0) > 0;
 
                 Object.keys(b.contents).forEach(k => {
                     let vol = b.contents[k];
                     totalVol += vol;
-                    let chem = Chemicals[k];
-                    if (chem) {
-                        totalH += (chem.H || 0) * vol;
-                        totalOH += (chem.OH || 0) * vol;
+                    let mat = Materials[k];
+                    if (mat && mat.type === 'liquid' || mat.type === 'solid') {
+                        totalH += (mat.H || 1e-7) * vol;
+                        totalOH += (mat.OH || 1e-7) * vol;
                     }
                 });
 
@@ -408,8 +453,6 @@
                     else color = '#facc15';
                 } else if (hasPhenol) {
                     color = pH >= 8.2 ? '#ec4899' : 'rgba(255,255,255,0.15)';
-                } else if (hasMethyl) {
-                    color = pH <= 3.1 ? '#dc2626' : (pH >= 4.4 ? '#facc15' : '#ea580c');
                 } else {
                     if (pH < 5) color = 'rgba(248, 113, 113, 0.6)';
                     else if (pH > 9) color = 'rgba(74, 222, 128, 0.6)';
@@ -422,12 +465,14 @@
             updateNotebook(b) {
                 let res = this.calcChemistry(b);
                 let tbody = document.querySelector('#notebookTable tbody');
-                let summary = Object.keys(b.contents).map(k => `${Chemicals[k].name.split(' ')[0]} (${b.contents[k]}mL)`).join(', ');
+                let summary = Object.keys(b.contents).map(k => `${Materials[k].name.split(' ')[0]} (${b.contents[k]}mL)`).join(', ');
                 tbody.innerHTML = `<tr><td>Beher #${b.id}</td><td>${summary}</td><td><b>${res.pH}</b></td><td>${b.temp.toFixed(1)}°C</td></tr>` + tbody.innerHTML;
             },
 
             resetAll() {
-                this.beakers.forEach(b => { b.volume = 0; b.contents = {}; b.temp = 22; b.heating = false; });
+                this.beakers = [
+                    { id: 1, x: 375, y: 300, volume: 50, maxVol: 100, temp: 22, heating: false, cooling: false, condenser: false, contents: { water: 50 } }
+                ];
                 document.getElementById('aiNotes').innerHTML = "Masa sıfırlandı.";
                 document.getElementById('instrumentValue').innerText = "--";
                 document.querySelector('#notebookTable tbody').innerHTML = "";
@@ -438,62 +483,127 @@
                     let ctx = this.ctx;
                     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                    // Tezgah
-                    ctx.fillStyle = "#0f172a";
-                    ctx.fillRect(0, 330, this.canvas.width, 90);
+                    // Tezgah zemin tahtası
+                    ctx.fillStyle = "#0a0f1d";
+                    ctx.fillRect(0, 380, this.canvas.width, 120);
                     ctx.strokeStyle = "#1e293b";
                     ctx.lineWidth = 3;
-                    ctx.beginPath(); ctx.moveTo(0, 330); ctx.lineTo(this.canvas.width, 330); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(0, 380); ctx.lineTo(this.canvas.width, 380); ctx.stroke();
 
-                    // Beherler
+                    // Termodinamik Fizik Güncellemesi (Her frame)
+                    this.beakers.forEach(b => {
+                        // Ortalama kaynama noktası hesapla
+                        let avgBoilingPoint = 100;
+                        let totalVol = b.volume;
+                        if (totalVol > 0) {
+                            let bpSum = 0;
+                            Object.keys(b.contents).forEach(k => {
+                                bpSum += (Materials[k].boilingPoint || 100) * b.contents[k];
+                            });
+                            avgBoilingPoint = bpSum / totalVol;
+                        }
+
+                        if (b.heating && totalVol > 0) {
+                            // Isınma hızı (özgül ısıya bağlı)
+                            b.temp = Math.min(avgBoilingPoint + 20, b.temp + 0.12);
+                            if (b.temp >= avgBoilingPoint) {
+                                let evapRate = b.condenser ? 0.01 : 0.05; // Damıtma kolonu buharı geri yoğunlaştırır
+                                b.volume = Math.max(0, b.volume - evapRate);
+                            }
+                        } else if (b.cooling) {
+                            // Soğutucu banyo ile hızla soğuma
+                            b.temp += (5 - b.temp) * 0.03;
+                            if (b.temp < 5) b.temp = 5;
+                        } else {
+                            // Newton Soğuma Kanunu: Isıtıcı kapalıyken oda sıcaklığına (22°C) yavaşça yaklaşır
+                            b.temp += (22 - b.temp) * 0.004;
+                        }
+                    });
+
+                    // Beherleri Çiz
                     this.beakers.forEach(b => {
                         ctx.save();
                         ctx.translate(b.x, b.y);
 
-                        // Isıtıcı (Bunsen Ocağı)
+                        // Bunsen Ocağı Alevi
                         if (b.heating) {
-                            b.temp = Math.min(120, b.temp + 0.15);
-                            if (b.volume > 0 && b.temp >= 100) b.volume = Math.max(0, b.volume - 0.05);
-                            
-                            // Alev Efekti
                             ctx.fillStyle = "#38bdf8";
                             ctx.beginPath();
-                            ctx.moveTo(-18, 65); ctx.lineTo(18, 65); ctx.lineTo(0, 42 + Math.random()*12); ctx.closePath();
+                            ctx.moveTo(-20, 80); ctx.lineTo(20, 80); ctx.lineTo(0, 52 + Math.random()*12); ctx.closePath();
                             ctx.fill();
 
                             ctx.fillStyle = "#facc15";
                             ctx.font = "10px sans-serif";
                             ctx.textAlign = "center";
-                            ctx.fillText("🔥 ISINIYOR", 0, 58);
+                            ctx.fillText(`🔥 ${b.temp.toFixed(0)}°C`, 0, 72);
                         }
 
-                        // Cam Beher Çizimi
-                        ctx.strokeStyle = "#94a3b8";
+                        // Soğutucu Banyo Kutusu
+                        if (b.cooling) {
+                            ctx.strokeStyle = "#38bdf8";
+                            ctx.lineWidth = 2;
+                            ctx.strokeRect(-45, -55, 90, 135);
+                            ctx.fillStyle = "rgba(56, 189, 248, 0.15)";
+                            ctx.fillRect(-45, -55, 90, 135);
+                        }
+
+                        // Damıtma Kolonu (Condenser) Üst Aparat
+                        if (b.condenser) {
+                            ctx.strokeStyle = "#94a3b8";
+                            ctx.lineWidth = 4;
+                            ctx.beginPath();
+                            ctx.moveTo(0, -50); ctx.lineTo(0, -85); ctx.lineTo(35, -85);
+                            ctx.stroke();
+
+                            ctx.fillStyle = "#38bdf8";
+                            ctx.font = "9px sans-serif";
+                            ctx.textAlign = "center";
+                            ctx.fillText("🧪 Damıtma", 18, -90);
+                        }
+
+                        // Profesyonel Cam Beher Gövdesi
+                        let gradient = ctx.createLinearGradient(-50, 0, 50, 0);
+                        gradient.addColorStop(0, "rgba(255, 255, 255, 0.15)");
+                        gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.05)");
+                        gradient.addColorStop(1, "rgba(255, 255, 255, 0.2)");
+                        
+                        ctx.strokeStyle = "#cbd5e1";
                         ctx.lineWidth = 3;
                         ctx.beginPath();
-                        ctx.moveTo(-45, -50); ctx.lineTo(-35, 50);
-                        ctx.lineTo(35, 50); ctx.lineTo(45, -50);
+                        ctx.moveTo(-45, -60); ctx.lineTo(-35, 60);
+                        ctx.lineTo(35, 60); ctx.lineTo(45, -60);
                         ctx.stroke();
 
-                        // Sıvı Dolumu
+                        // Beher Ölçek Çizgileri (Graduations)
+                        ctx.strokeStyle = "rgba(255,255,255,0.3)";
+                        ctx.lineWidth = 1;
+                        for(let i = 1; i <= 4; i++) {
+                            let ly = 60 - i * 25;
+                            ctx.beginPath(); ctx.moveTo(-38, ly); ctx.lineTo(-30, ly); ctx.stroke();
+                        }
+
+                        // Sıvı Dolumu ve Menisküs Eğrisi
                         if (b.volume > 0) {
                             let chemRes = this.calcChemistry(b);
-                            let liquidH = (b.volume / b.maxVol) * 90;
+                            let liquidH = (b.volume / b.maxVol) * 105;
+                            
                             ctx.fillStyle = chemRes.color;
                             ctx.beginPath();
-                            ctx.moveTo(-37, 48 - liquidH);
-                            ctx.lineTo(37, 48 - liquidH);
-                            ctx.lineTo(33, 48);
-                            ctx.lineTo(-33, 48);
+                            ctx.moveTo(-37, 58 - liquidH);
+                            ctx.lineTo(37, 58 - liquidH);
+                            ctx.lineTo(33, 58);
+                            ctx.lineTo(-33, 58);
                             ctx.closePath();
                             ctx.fill();
 
-                            // Kaynama Baloncukları
-                            if (b.temp >= 95) {
-                                ctx.fillStyle = "rgba(255,255,255,0.8)";
-                                for(let i=0; i<3; i++) {
-                                    let bx = (Math.random() - 0.5) * 30;
-                                    let by = 48 - liquidH + Math.random() * liquidH;
+                            // Kaynama Kabarcıkları
+                            let avgBP = 100;
+                            Object.keys(b.contents).forEach(k => { avgBP = Materials[k].boilingPoint || 100; });
+                            if (b.temp >= avgBP - 2) {
+                                ctx.fillStyle = "rgba(255,255,255,0.85)";
+                                for(let i=0; i<4; i++) {
+                                    let bx = (Math.random() - 0.5) * 35;
+                                    let by = 58 - liquidH + Math.random() * liquidH;
                                     ctx.beginPath(); ctx.arc(bx, by, 2, 0, 2*Math.PI); ctx.fill();
                                 }
                             }
@@ -502,26 +612,26 @@
                         ctx.fillStyle = "#f1f5f9";
                         ctx.font = "12px sans-serif";
                         ctx.textAlign = "center";
-                        ctx.fillText(`Beher #${b.id} (${Math.round(b.volume)}mL)`, 0, 75);
+                        ctx.fillText(`Beher #${b.id} (${Math.round(b.volume)}mL)`, 0, 88);
                         ctx.restore();
                     });
 
-                    // Minecraft Tarzı İmleç Takip Eden Eşya / Araç Çizimi
-                    if (this.activeTool === 'ph' || this.activeTool === 'temp' || this.activeTool === 'pipette') {
+                    // Minecraft Tarzı İmleç Takip Eden Eşya / Araç
+                    if (['ph', 'temp', 'pipette'].includes(this.activeTool)) {
                         ctx.save();
                         ctx.translate(this.mouseX, this.mouseY);
-                        ctx.fillStyle = "rgba(6, 182, 212, 0.8)";
+                        ctx.fillStyle = "rgba(6, 182, 212, 0.85)";
                         ctx.beginPath(); ctx.arc(0, 0, 8, 0, 2*Math.PI); ctx.fill();
                         
                         ctx.fillStyle = "#fff";
                         ctx.font = "11px sans-serif";
                         ctx.textAlign = "left";
                         let label = this.activeTool === 'ph' ? 'pH Prob' : (this.activeTool === 'temp' ? 'Termometre' : 'Pipet');
-                        ctx.fillText(label, 12, 4);
+                        ctx.fillText(label, 14, 4);
                         ctx.restore();
                     }
 
-                    // Parçacıklar
+                    // Damla Parçacıkları
                     this.particles.forEach(p => {
                         p.y += p.vy;
                         ctx.beginPath();
@@ -529,7 +639,7 @@
                         ctx.fillStyle = p.color;
                         ctx.fill();
                     });
-                    this.particles = this.particles.filter(p => p.y < 320);
+                    this.particles = this.particles.filter(p => p.y < 370);
 
                     this.animId = requestAnimationFrame(render);
                 };
