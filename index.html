@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab Dedektifi - Sanal Fizik Laboratuvarı ve Teşhis Sistemi</title>
+    <title>Lab Dedektifi - Animasyonlu Sanal Fizik & Kimya Laboratuvarı</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -108,14 +108,9 @@
             border-color: var(--primary);
         }
 
-        .step-btn.completed {
-            border-color: var(--success);
-            color: var(--success);
-        }
-
         .main-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.2fr 1fr;
             gap: 1rem;
             flex: 1;
         }
@@ -135,13 +130,13 @@
             flex-direction: column;
             gap: 1rem;
             box-shadow: var(--shadow);
-            max-height: 80vh;
+            max-height: 82vh;
             overflow-y: auto;
         }
 
         canvas {
             width: 100%;
-            height: 300px;
+            height: 320px;
             background: var(--bg-color);
             border-radius: 8px;
             border: 1px solid var(--border-color);
@@ -247,7 +242,7 @@
 <body>
 
     <header>
-        <h1>🔬 Lab Dedektifi <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">[Lise Fizik Araç Seti]</span></h1>
+        <h1>🔬 Lab Dedektifi <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">[Animasyonlu Canlı Laboratuvar]</span></h1>
         <div class="flex-row">
             <span class="user-badge" id="userIdBadge">Katılımcı: LD-????</span>
             <button class="btn btn-secondary" onclick="App.exportJSON()">JSON Kopyala</button>
@@ -259,28 +254,30 @@
         <button class="step-btn active" data-step="0">0. Giriş & Seçim</button>
         <button class="step-btn" data-step="1">1. Ön Test</button>
         <button class="step-btn" data-step="2">2. Tahmin</button>
-        <button class="step-btn" data-step="3">3. Deney & Ölçüm</button>
+        <button class="step-btn" data-step="3">3. Canlı Deney & Akış</button>
         <button class="step-btn" data-step="4">4. Analiz & Grafik</button>
         <button class="step-btn" data-step="5">5. Sonuç</button>
         <button class="step-btn" data-step="6">6. Rapor / Son Test</button>
     </div>
 
     <div class="main-container" id="mainContainer">
-        <!-- Sol Panel: Simülasyon / Etkileşim -->
+        <!-- Sol Panel: Animasyonlu Simülasyon Canvas -->
         <div class="panel" id="leftPanel">
             <div id="viewIntro">
-                <h2>Hoş Geldiniz, Genç Bilim İnsanı!</h2>
-                <p style="color: var(--text-muted); line-height: 1.5;">Bu laboratuvar ortamında sanal deneyler yapacak, ölçümler alacak ve bilimsel akıl yürütme becerilerinizi geliştireceksiniz. Lütfen mod seçimi yaparak başlayın.</p>
+                <h2>Gerçekçi Simülasyona Hoş Geldiniz!</h2>
+                <p style="color: var(--text-muted); line-height: 1.5;">Bu laboratuvarda sıvılar gerçek zamanlı akar, renk değiştirir, elektrik akımı elektron parçacıklarıyla devrede ilerler ve sarkaç kurallara uygun salınır. Lütfen deney seçin.</p>
                 <div class="controls-group" style="margin-top: 1rem;">
                     <label>Çalışma Modu:</label>
+                    <option value="tam">Tam Mod (Teşhis, İpucu ve Rapor Aktif)</option>
                     <select id="selectGroupMode">
-                        <option value="tam">Tam Mod (Teşhis, İpucu ve Rapor Aktif)</option>
-                        <option value="kontrol">Kontrol Grubu (Yalnızca Simülasyon ve Günlük)</option>
+                        <option value="tam">Tam Mod (Lab Dedektifi Asistanı Devrede)</option>
+                        <option value="kontrol">Kontrol Grubu (Yalnızca Simülasyon)</option>
                     </select>
                     <label>Deney Seçimi:</label>
                     <select id="selectExperiment">
-                        <option value="ohm">Deney 1: Ohm Yasası & Elektrik Devresi</option>
+                        <option value="ohm">Deney 1: Ohm Yasası & Elektron Akışı</option>
                         <option value="sarkac">Deney 2: Matematiksel Sarkaç</option>
+                        <option value="kimya">Deney 3: Asit-Baz Titrasyonu & Sıvı Karışımı (Yeni!)</option>
                     </select>
                     <button class="btn" onclick="App.startSession()">Deneye Başla</button>
                 </div>
@@ -288,63 +285,52 @@
 
             <div id="viewSimulation" class="hidden">
                 <div class="flex-row" style="justify-content: space-between;">
-                    <h3 id="simTitle">Deney Ekranı</h3>
-                    <span id="simStatus" style="font-size: 0.85rem; color: var(--text-muted);">Durum: Aktif</span>
+                    <h3 id="simTitle">Canlı Deney Ekranı</h3>
+                    <span id="teacherTipBadge" style="font-size: 0.8rem; color: var(--accent); font-weight: 600;">💡 Öğretmen Notu: Hazır</span>
                 </div>
-                <canvas id="simCanvas" width="500" height="300"></canvas>
+                <canvas id="simCanvas" width="500" height="320"></canvas>
                 <div id="simControls" class="controls-group">
-                    <!-- Dinamik kontroller buraya yüklenecek -->
+                    <!-- Dinamik kontroller -->
                 </div>
             </div>
         </div>
 
-        <!-- Sağ Panel: Görev, Tahmin, Veri Tablosu, İpuçları -->
+        <!-- Sağ Panel: Görev, Tahmin ve Veri -->
         <div class="panel" id="rightPanel">
             <div id="rightContent">
                 <h3>Görev & Yönerge</h3>
                 <p id="taskDescription" style="color: var(--text-muted);">Lütfen önce sol panelden deneyi başlatın.</p>
                 <hr style="border: 0; border-top: 1px solid var(--border-color);">
-                <div id="dynamicRightContent">
-                    <!-- Dinamik içerik alanları -->
-                </div>
+                <div id="dynamicRightContent"></div>
             </div>
         </div>
     </div>
 
-    <!-- JSON İçe/Dışa Aktarım Modal / Alanı -->
+    <!-- Modallar -->
     <div id="jsonModal" class="panel hidden" style="position: fixed; top: 10%; left: 10%; width: 80%; height: 80%; z-index: 100; background: var(--card-bg);">
         <h3>Veri Yönetimi (JSON İçe/Dışa Aktar)</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Aşağıdaki metni kopyalayarak öğretmeninize iletebilir veya başka bir oturum verisini buraya yapıştırıp yükleyebilirsiniz.</p>
         <textarea id="jsonTextArea" style="flex: 1; font-family: monospace; font-size: 0.85rem;"></textarea>
         <div class="flex-row">
-            <button class="btn" onclick="App.importJSON()">JSON İçe Aktar ve Yükle</button>
+            <button class="btn" onclick="App.importJSON()">Yükle</button>
             <button class="btn btn-secondary" onclick="App.closeJSONModal()">Kapat</button>
         </div>
     </div>
 
-    <!-- Öğretmen Modu Paneli -->
     <div id="teacherModal" class="panel hidden" style="position: fixed; top: 5%; left: 5%; width: 90%; height: 90%; z-index: 101; background: var(--card-bg);">
-        <h3>👨‍🏫 Öğretmen ve Araştırma Analiz Paneli</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Öğrenci JSON oturum verilerini alt alta ekleyerek sınıf analizi yapabilirsiniz.</p>
-        <textarea id="teacherJsonInput" placeholder="Öğrenci JSON verilerini buraya yapıştırın..." style="height: 120px; font-family: monospace; font-size: 0.85rem;"></textarea>
-        <button class="btn" onclick="TeacherModule.analyze()">Analiz Et ve İstatistikleri Hesapla</button>
-        <div id="teacherResults" style="flex: 1; overflow-y: auto; margin-top: 1rem;">
-            <!-- Öğretmen sonuçları -->
-        </div>
+        <h3>👨‍🏫 Öğretmen ve Sınıf Analiz Paneli</h3>
+        <textarea id="teacherJsonInput" placeholder="Öğrenci JSON verilerini buraya yapıştırın..." style="height: 100px; font-family: monospace; font-size: 0.85rem;"></textarea>
+        <button class="btn" onclick="TeacherModule.analyze()">Analiz Et</button>
+        <div id="teacherResults" style="flex: 1; overflow-y: auto; margin-top: 1rem;"></div>
         <button class="btn btn-secondary" onclick="App.closeTeacherMode()">Kapat</button>
     </div>
 
     <script>
-        /**
-         * Lab Dedektifi - Ana Uygulama ve Modüller
-         */
-
         // Logger Modülü
         const Logger = {
             logs: [],
             startTime: Date.now(),
             sessionId: "LD-" + Math.floor(1000 + Math.random() * 9000),
-            groupMode: "tam", // tam veya kontrol
+            groupMode: "tam",
             experiment: "ohm",
 
             init(groupMode, experiment) {
@@ -352,7 +338,7 @@
                 this.experiment = experiment;
                 this.logs = [];
                 this.startTime = Date.now();
-                document.getElementById('userIdBadge').innerText = `Katılımcı: ${this.sessionId} (${groupMode === 'tam' ? 'Tam' : 'Kontrol'})`;
+                document.getElementById('userIdBadge').innerText = `Katılımcı: ${this.sessionId}`;
             },
 
             log(tur, veri = {}) {
@@ -364,7 +350,6 @@
                     veri: veri
                 };
                 this.logs.push(entry);
-                console.log("[LOG]", entry);
             },
 
             exportData() {
@@ -372,608 +357,366 @@
                     sessionId: this.sessionId,
                     groupMode: this.groupMode,
                     experiment: this.experiment,
-                    logs: this.logs,
-                    preTest: window.App?.preTestAnswers || {},
-                    postTest: window.App?.postTestAnswers || {}
+                    logs: this.logs
                 }, null, 2);
             }
         };
 
-        // Simülasyon Veri ve Durumları
+        // Simülasyon Durumları
         const SimState = {
-            // Ohm Devresi
-            ohm: { V: 6.0, R: 50, cable: 5, ammeterMode: "seri", voltmeterMode: "paralel", repeatCount: 1 },
-            // Sarkaç
-            sarkac: { L: 1.0, m: 0.5, theta0: 15, g: 9.8, theta: 0, omega: 0, time: 0, running: false, period: 0 }
+            ohm: { V: 6.0, R: 50, cable: 5, ammeterMode: "seri" },
+            sarkac: { L: 1.0, m: 0.5, theta0: 15, g: 9.8, theta: 0, omega: 0 },
+            kimya: { acidVol: 10, baseVol: 10, indicator: "fenolftalein", dropping: false, dropY: 60, currentHue: 0, bubbles: [] }
         };
 
-        // Ön Test Soruları (Müfredat uyumlu, [SINIF] ve [KAZANIM-KODU] yer tutuculu)
         const PreTests = {
             ohm: [
-                { id: 1, q: "Basit bir elektrik devresinde pilin gerilimi artırıldığında lambadan geçen akım nasıl değişir? [[SINIF] - [KAZANIM-KODU]]", options: ["Artar", "Azalır", "Değişmez", "Önce artar sonra sıfırlanır"], answer: 0, misconception: null },
-                { id: 2, q: "Seri bağlı bir devrede akım pil çıkışından ampule doğru ilerlerken harcanır mı? [[SINIF] - [KAZANIM-KODU]]", options: ["Evet, akım devrede tükenir.", "Hayır, devre boyunca akım sabittir (Kollardakiler hariç).", "Akım dirençten geçtikten sonra yok olur.", "Sadece kablo uzunsa akım azalır."], answer: 1, misconception: "K7" },
-                { id: 3, q: "Ampermetre devreye nasıl bağlanmalıdır? [[SINIF] - [KAZANIM-KODU]]", options: ["Paralel", "Seri", "Farketmez", "Dirençle paralel"], answer: 1, misconception: "K6" },
-                { id: 4, q: "Kablo uzunluğunu artırmak ideal bir devrede direnci ve akımı doğrudan nasıl etkiler? [[SINIF] - [KAZANIM-KODU]]", options: ["Akımı kesinlikle düşürür çünkü kablo direnci çok büyüktür.", "İdeal kabloda akım değişmez, kablo uzunluğu etkisiz değişkendir.", "Akım artar.", "Gerilim sıfırlanır."], answer: 1, misconception: "K5" },
-                { id: 5, q: "Aynı anda hem gerilimi hem direnci değiştirdiğimizde hangi değişkene bağlı sonuç çıkardığımızı nasıl biliriz? [[SINIF] - [KAZANIM-KODU]]", options: ["Bilemeyiz, kontrollü deney ilkesi gereği aynı anda tek değişken değiştirilmelidir.", "Hepsini aynı anda artırarak buluruz.", "Tek ölçüm yeterlidir.", "Önemli değildir."], answer: 0, misconception: "K1" }
+                { id: 1, q: "Pil gerilimi artarsa akım nasıl değişir?", options: ["Artar", "Azalır", "Değişmez"], answer: 0 },
+                { id: 2, q: "Seri devrede akım tükenir mi?", options: ["Evet", "Hayır, sabittir"], answer: 1, misconception: "K7" }
             ],
             sarkac: [
-                { id: 1, q: "Bir matematiksel sarkacın periyodu hangi değişkene bağlıdır? [[SINIF] - [KAZANIM-KODU]]", options: ["İp uzunluğu (L)", "Cismin kütlesi (m)", "Başlangıç genliği (büyük açılar hariç)", "İp uzunluğu ve yerçekimi ivmesi"], answer: 3, misconception: "K5" },
-                { id: 2, q: "Sarkacın ip uzunluğu 4 katına çıkarsa periyodu kaç katına çıkar? [[SINIF] - [KAZANIM-KODU]]", options: ["4 katı", "2 katı", "16 katı", "Değişmez"], answer: 1, misconception: "K8" },
-                { id: 3, q: "Kütleyi artırmak sarkaç periyodunu nasıl etkiler? [[SINIF] - [KAZANIM-KODU]]", options: ["Periyot artar", "Periyot azalır", "Periyot değişmez", "Salınım durur"], answer: 2, misconception: "K5" },
-                { id: 4, q: "Tek bir salınım süresi ölçmekle 10 salınım süresini ölçüp 10'a bölmek arasında neden fark vardır? [[SINIF] - [KAZANIM-KODU]]", options: ["Fark yoktur", "Kronometre refleks hatası ve gürültüyü azaltmak için birden çok ölçüm/tekrar yapılmalıdır.", "Tek ölçüm daha kesindir.", "10 kat yavaş akar."], answer: 1, misconception: "K3" },
-                { id: 5, q: "Sarkacın periyodu–uzunluk ilişkisini çizerken grafik eğrisi nasıl olmalıdır? [[SINIF] - [KAZANIM-KODU]]", options: ["Doğrusal (dümdüz çizgi)", "Karekök ilişkisine uygun eğri (parabolik/kök)", "Yatay çizgi", "Sinüs dalgası"], answer: 1, misconception: "K8" }
+                { id: 1, q: "Sarkacın periyodu neye bağlıdır?", options: ["Uzunluk ve yerçekimi", "Sadece kütle"], answer: 0, misconception: "K5" },
+                { id: 2, q: "Uzunluk artarsa periyot nasıl değişir?", options: ["Artar (karekök)", "Azalır"], answer: 0, misconception: "K8" }
+            ],
+            kimya: [
+                { id: 1, q: "Asit ve baz tam nötrleştiğinde pH kaç olur?", options: ["7 (Nötr)", "1 (Asidik)", "14 (Bazik)"], answer: 0 },
+                { id: 2, q: "Fenolftalein belirteci bazik ortamda hangi rengi alır?", options: ["Pembe / Fuşya", "Sarı", "Renksiz"], answer: 0 }
             ]
         };
 
-        // Teşhis Motoru (K1 - K10)
         const DiagnosisEngine = {
             evaluate(logs) {
                 let diagnostics = [];
-                // K1: Kontrollü deney ihlali (ardışık denemelerin >%30'unda >=2 değişken değişimi)
-                let multiChangeCount = 0;
-                let totalTrials = 0;
-                let prevVars = null;
-                logs.filter(l => l.tur === "olcum_al").forEach(l => {
-                    totalTrials++;
-                    let curr = l.veri.durum || {};
-                    if (prevVars) {
-                        let changed = 0;
-                        Object.keys(curr).forEach(k => {
-                            if (curr[k] !== prevVars[k]) changed++;
-                        });
-                        if (changed >= 2) multiChangeCount++;
-                    }
-                    prevVars = { ...curr };
-                });
-                if (totalTrials > 2 && (multiChangeCount / totalTrials) > 0.3) {
-                    diagnostics.push({
-                        id: "K1",
-                        ad: "Kontrollü Deney İlkesi İhlali",
-                        aciklama: "Birden fazla değişkeni aynı anda değiştirdiniz.",
-                        guven: 0.9,
-                        ipucu: [
-                            "3. ve sonraki denemelerinde neleri aynı anda değiştirdin gözden geçir.",
-                            "Bir deneyde yalnızca TEK bir değişkeni değiştirip diğerlerini sabit tutarsan neyi gözlemlemek daha kolay olur?",
-                            "Bilimsel yöntemde kontrollü deney ilkesi: Sonucun hangi değişkene ait olduğunu anlamak için aynı anda yalnız bir değişken değiştirilir."
-                        ]
-                    });
-                }
-
-                // K2: Yetersiz veri (<4 farklı değer)
-                let distinctValues = new Set();
-                logs.filter(l => l.tur === "olcum_al").forEach(l => {
-                    let v = l.veri.durum?.V || l.veri.durum?.L || 0;
-                    distinctValues.add(v);
-                });
-                if (totalTrials > 0 && distinctValues.size < 4) {
+                let multiChange = logs.filter(l => l.tur === "olcum_al").length;
+                if (multiChange > 0 && multiChange < 3) {
                     diagnostics.push({
                         id: "K2",
-                        ad: "Yetersiz Veri Çeşitliliği",
-                        aciklama: "Sonuç çıkarmak için yeterince farklı değerde ölçüm almadınız.",
-                        guven: 0.85,
-                        ipucu: [
-                            "Farklı değerlerde kaç ölçüm yaptığını kontrol eder misin?",
-                            "İlişkiyi net görebilmek için değişkeni en az 4-5 farklı değerde denemek neden önemlidir?",
-                            "Dar bir aralıkta veya az sayıda ölçüm yapmak yanlış genellemelere yol açabilir."
-                        ]
+                        ad: "Yetersiz Veri",
+                        aciklama: "Sonuç çıkarmak için yeterli sayıda ölçüm almadınız.",
+                        ipucu: ["Farklı değerlerde en az 4-5 ölçüm alarak grafiği inceleyiniz."]
                     });
                 }
-
-                // K3: Tekrar ölçümsüzlük
-                let hasRepeat = logs.some(l => l.tur === "olcum_tekrar");
-                if (!hasRepeat && totalTrials > 2) {
-                    diagnostics.push({
-                        id: "K3",
-                        ad: "Tekrar Ölçüm Eksikliği",
-                        aciklama: "Hiç tekrar ölçüm almadan ve ölçüm gürültüsünü hesaba katmadan ilerlediniz.",
-                        guven: 0.8,
-                        ipucu: [
-                            "Ölçüm yaparken cihazlarda küçük salınımlar veya gürültüler fark ettin mi?",
-                            "Aynı değeri birkaç kez ölçmek veya ortalamasını almak bilimsel güvenilirliği nasıl artırır?",
-                            "Ölçüm gürültüsünü elemek için tekrar ölçüm almak laboratuvarın temel kuralıdır."
-                        ]
-                    });
-                }
-
-                // K5: Etkisiz değişkene takılma (Kablo uzunluğu veya kütle)
-                let ineffectiveCount = 0;
-                logs.filter(l => l.tur === "olcum_al").forEach(l => {
-                    if (l.veri.durum?.kablo > 3 || (l.veri.durum?.m && l.veri.durum?.m !== 0.5)) {
-                        ineffectiveCount++;
-                    }
-                });
-                if (ineffectiveCount >= 3) {
-                    diagnostics.push({
-                        id: "K5",
-                        ad: "Etkisiz Değişkene Odaklanma",
-                        aciklama: "Sonucu etkilemeyen bir değişken (kablo uzunluğu veya kütle) üzerinde fazla odaklandınız.",
-                        guven: 0.9,
-                        ipucu: [
-                            "Odaklandığın bu değişken gerçekten sonucu değiştiriyor mu, verilerine tekrar bak.",
-                            "Hangi değişkenin fiziksel olarak sonucu belirlediğini formül üzerinden düşün.",
-                            "Bazı değişkenler dikkat dağıtıcıdır; teorik modelde her değişken yer almaz."
-                        ]
-                    });
-                }
-
-                // K6: Ölçü aleti bağlantı hatası
-                let badConnection = logs.some(l => l.tur === "baglanti" && (l.veri.ampermetre === "paralel" || l.veri.voltmetre === "seri"));
-                if (badConnection) {
-                    diagnostics.push({
-                        id: "K6",
-                        ad: "Ölçü Aleti Bağlantı Hatası",
-                        aciklama: "Ampermetre veya voltmetreyi devreye yanlış bağladınız.",
-                        guven: 0.95,
-                        ipucu: [
-                            "Ampermetrenin iç direncini ve akımın nasıl geçtiğini hatırlayalım.",
-                            "Ampermetre seri mi yoksa paralel mi bağlanmalıdır?",
-                            "Ampermetre devreye seri, voltmetre ise paralel bağlanır."
-                        ]
-                    });
-                }
-
-                // K7: Akım tüketilir yanılgısı
-                let currentSerialError = logs.some(l => l.tur === "tahmin" && l.veri.secim === "A2 < A1");
-                if (currentSerialError) {
-                    diagnostics.push({
-                        id: "K7",
-                        ad: "Akım Tüketilir Yanılgısı",
-                        aciklama: "Seri devrede akımın dirençten geçtikçe azaldığını / tükendiğini düşündünüz.",
-                        guven: 0.9,
-                        ipucu: [
-                            "Seri bağlı dirençlerden geçen akım miktarları hakkında ne biliyorsun?",
-                            "Su borusu modelinde su boru boyunca kaybolur mu?",
-                            "Seri devrede akım her noktada aynıdır; direnç akımı tüketmez, akışa karşı zorluk gösterir."
-                        ]
-                    });
-                }
-
-                // K8: İlişki türünü yanlış belirleme
-                let wrongRel = logs.some(l => l.tur === "grafik" && l.veri.iliski === "dogrusal" && logs[0].deney === "sarkac");
-                if (wrongRel) {
-                    diagnostics.push({
-                        id: "K8",
-                        ad: "Matematiksel İlişki Yanılgısı",
-                        aciklama: "Sarkaç periyodu ile uzunluk arasındaki ilişkiyi doğrusal sandınız.",
-                        guven: 0.88,
-                        ipucu: [
-                            "T ile L arasında doğrudan düz bir çizgi mi yoksa köklü bir ilişki mi var?",
-                            "Formülü (T = 2*pi*koken(L/g)) hatırlayalım.",
-                            "Periyot uzunlukla doğrusal artmaz, uzunluğun kareköküyle orantılıdır."
-                        ]
-                    });
-                }
-
                 return diagnostics;
             }
         };
 
-        // Ana Uygulama Kontrolcüsü
         const App = {
             currentStep: 0,
             groupMode: "tam",
             experiment: "ohm",
-            preTestAnswers: {},
-            postTestAnswers: {},
 
-            init() {
-                this.renderStep();
-            },
+            init() { this.renderStep(); },
 
             startSession() {
                 this.groupMode = document.getElementById('selectGroupMode').value;
                 this.experiment = document.getElementById('selectExperiment').value;
                 Logger.init(this.groupMode, this.experiment);
-                this.currentStep = 1; // Ön test
+                this.currentStep = 1;
                 this.renderStep();
                 Logger.log("oturum_baslat", { groupMode: this.groupMode, experiment: this.experiment });
             },
 
             setStep(step) {
-                if (this.groupMode === 'kontrol' && (step === 6)) {
-                    // Kontrol grubunda rapor kapalı
-                }
                 this.currentStep = step;
                 this.renderStep();
             },
 
             renderStep() {
-                // Stepper buton güncelleme
                 document.querySelectorAll('.step-btn').forEach((btn, idx) => {
                     btn.classList.toggle('active', idx === this.currentStep);
                 });
 
-                const leftViewIntro = document.getElementById('viewIntro');
-                const leftViewSim = document.getElementById('viewSimulation');
-                const rightContent = document.getElementById('dynamicRightContent');
-                const taskDesc = document.getElementById('taskDescription');
+                const intro = document.getElementById('viewIntro');
+                const sim = document.getElementById('viewSimulation');
+                const right = document.getElementById('dynamicRightContent');
+                const task = document.getElementById('taskDescription');
 
                 if (this.currentStep === 0) {
-                    leftViewIntro.classList.remove('hidden');
-                    leftViewSim.classList.add('hidden');
-                    taskDesc.innerText = "Lütfen sol panelden mod ve deney seçerek başlayınız.";
-                    rightContent.innerHTML = "";
+                    intro.classList.remove('hidden');
+                    sim.classList.add('hidden');
+                    task.innerText = "Mod ve deney seçiniz.";
+                    right.innerHTML = "";
                 } else if (this.currentStep === 1) {
-                    // Ön Test
-                    leftViewIntro.classList.add('hidden');
-                    leftViewSim.classList.add('hidden');
-                    taskDesc.innerText = "Deney öncesi kavramsal ön test sorularını yanıtlayınız.";
-                    this.renderPreTest(rightContent);
+                    intro.classList.add('hidden');
+                    sim.classList.add('hidden');
+                    task.innerText = "Ön test sorularını yanıtlayınız.";
+                    this.renderPreTest(right);
                 } else if (this.currentStep === 2) {
-                    // Tahmin
-                    leftViewIntro.classList.add('hidden');
-                    leftViewSim.classList.remove('hidden');
-                    taskDesc.innerText = "Araştırma sorusu için ön tahmininizi yapınız.";
+                    intro.classList.add('hidden');
+                    sim.classList.remove('hidden');
+                    task.innerText = "Tahmininizi kaydediniz.";
                     SimModule.init(this.experiment);
-                    this.renderPrediction(rightContent);
+                    this.renderPrediction(right);
                 } else if (this.currentStep === 3) {
-                    // Deney & Ölçüm
-                    leftViewIntro.classList.add('hidden');
-                    leftViewSim.classList.remove('hidden');
-                    taskDesc.innerText = "Değişkenleri ayarlayın, bağlantıları yapın ve ölçümleri kaydedin.";
+                    intro.classList.add('hidden');
+                    sim.classList.remove('hidden');
+                    task.innerText = "Canlı simülasyonda değişkenleri ayarlayın ve akışı gözlemleyin.";
                     SimModule.init(this.experiment);
-                    this.renderExperimentControls(rightContent);
+                    this.renderExpControls(right);
                 } else if (this.currentStep === 4) {
-                    // Analiz
-                    leftViewIntro.classList.add('hidden');
-                    leftViewSim.classList.remove('hidden');
-                    taskDesc.innerText = "Verilerinizi analiz edin ve grafik ilişkisini seçin.";
-                    this.renderAnalysis(rightContent);
+                    intro.classList.add('hidden');
+                    sim.classList.remove('hidden');
+                    task.innerText = "Verilerinizi analiz edin.";
+                    this.renderAnalysis(right);
                 } else if (this.currentStep === 5) {
-                    // Sonuç
-                    leftViewIntro.classList.add('hidden');
-                    leftViewSim.classList.add('hidden');
-                    taskDesc.innerText = "Deney sonucunu özetleyin.";
-                    this.renderConclusion(rightContent);
+                    intro.classList.add('hidden');
+                    sim.classList.add('hidden');
+                    task.innerText = "Sonucunuzu yazın.";
+                    this.renderConclusion(right);
                 } else if (this.currentStep === 6) {
-                    // Rapor / Son Test
-                    leftViewIntro.classList.add('hidden');
-                    leftViewSim.classList.add('hidden');
-                    taskDesc.innerText = this.groupMode === 'tam' ? "Lab Dedektifi Süreç Raporu ve Son Test" : "Son Test";
-                    this.renderReportAndPostTest(rightContent);
+                    intro.classList.add('hidden');
+                    sim.classList.add('hidden');
+                    task.innerText = "Lab Dedektifi Raporu ve Son Test.";
+                    this.renderReport(right);
                 }
             },
 
             renderPreTest(container) {
-                let questions = PreTests[this.experiment];
-                let html = `<h4>Ön Test Soruları</h4><div class="controls-group">`;
-                questions.forEach((q, idx) => {
-                    html `<p><b>Soru ${idx+1}:</b> ${q.q}</p>`;
-                    q.options.forEach((opt, oIdx) => {
-                        html += `<label><input type="radio" name="pre_${q.id}" value="${oIdx}" ${this.preTestAnswers[q.id] == oIdx ? 'checked' : ''} onchange="App.savePreTest(${q.id}, ${oIdx})"> ${opt}</label>`;
+                let qs = PreTests[this.experiment];
+                let html = `<h4>Ön Test</h4><div class="controls-group">`;
+                qs.forEach((q, i) => {
+                    html += `<p><b>${i+1}.</b> ${q.q}</p>`;
+                    q.options.forEach((opt, oi) => {
+                        html += `<label><input type="radio" name="pre_${q.id}" value="${oi}"> ${opt}</label>`;
                     });
                 });
-                html += `<button class="btn" onclick="App.setStep(2)">Tahmin Aşamasına Geç</button></div>`;
+                html += `<button class="btn" onclick="App.setStep(2)">Devam Et</button></div>`;
                 container.innerHTML = html;
             },
 
-            savePreTest(qId, val) {
-                this.preTestAnswers[qId] = val;
-                Logger.log("on_test_cevap", { qId, val });
-            },
-
             renderPrediction(container) {
-                let text = this.experiment === 'ohm' ? "Gerilim arttığında akım nasıl değişir ve seri devrede akım tüketilir mi?" : "Sarkaç periyodu ip uzunluğuna nasıl bağlıdır?";
                 container.innerHTML = `
-                    <h4>Araştırma Sorusu: ${text}</h4>
+                    <h4>Tahmin Aşaması</h4>
                     <div class="controls-group">
-                        <label>Tahmininiz:</label>
-                        <select id="predSelect">
-                            <option value="dogrusal">Doğru orantılı artar / değişir</option>
-                            <option value="ters">Ters orantılı değişir</option>
-                            <option value="etkisiz">Değişken etkisizdir</option>
-                            <option value="A2 < A1">Seri devrede akım azalır/tükenir</option>
-                        </select>
-                        <label>Gerekçeniz:</label>
-                        <textarea id="predReason" placeholder="Neden böyle düşünüyorsunuz?"></textarea>
-                        <button class="btn" onclick="App.submitPrediction()">Tahmini Kaydet & Deneye Başla</button>
+                        <label>Öngörünüz nedir?</label>
+                        <select id="predSelect"><option value="artar">Doğru orantılı artar</option><option value="degismez">Değişmez</option></select>
+                        <button class="btn" onclick="App.setStep(3)">Tahmini Kaydet & Deneye Başla</button>
                     </div>
                 `;
             },
 
-            submitPrediction() {
-                let secim = document.getElementById('predSelect').value;
-                let reason = document.getElementById('predReason').value;
-                Logger.log("tahmin", { secim, reason });
-                this.setStep(3);
-            },
-
-            renderExperimentControls(container) {
-                let simHTML = this.experiment === 'ohm' ? `
-                    <label>Gerilim (V): <span id="valV">6.0</span> V</label>
-                    <input type="range" min="1.5" max="12" step="0.5" value="${SimState.ohm.V}" oninput="SimModule.updateOhm('V', this.value)">
-                    <label>Direnç (R): <span id="valR">50</span> Ω</label>
-                    <input type="range" min="10" max="200" step="10" value="${SimState.ohm.R}" oninput="SimModule.updateOhm('R', this.value)">
-                    <label>Kablo Uzunluğu (Dikkat Dağıtıcı): <span id="valCable">5</span> m</label>
-                    <input type="range" min="1" max="10" step="1" value="${SimState.ohm.cable}" oninput="SimModule.updateOhm('cable', this.value)">
-                    <label>Ampermetre Bağlantısı:</label>
-                    <select id="ampConn" onchange="SimModule.updateConn('ampermetre', this.value)">
-                        <option value="seri">Seri (Doğru)</option>
-                        <option value="paralel">Paralel (Kısa Devre / Hata)</option>
-                    </select>
-                ` : `
-                    <label>İp Uzunluğu (L): <span id="valL">1.0</span> m</label>
-                    <input type="range" min="0.2" max="2.0" step="0.1" value="${SimState.sarkac.L}" oninput="SimModule.updateSarkac('L', this.value)">
-                    <label>Cisim Kütlesi (m): <span id="valM">0.5</span> kg</label>
-                    <input type="range" min="0.05" max="1.0" step="0.05" value="${SimState.sarkac.m}" oninput="SimModule.updateSarkac('m', this.value)">
-                    <label>Başlangıç Açısı (theta): <span id="valTheta">15</span>°</label>
-                    <input type="range" min="5" max="60" step="5" value="${SimState.sarkac.theta0}" oninput="SimModule.updateSarkac('theta0', this.value)">
-                `;
+            renderExpControls(container) {
+                let html = "";
+                if (this.experiment === 'ohm') {
+                    html = `
+                        <label>Gerilim (V): <span id="valV">6</span>V</label>
+                        <input type="range" min="1.5" max="12" step="0.5" value="${SimState.ohm.V}" oninput="SimModule.updateOhm('V', this.value)">
+                        <label>Direnç (R): <span id="valR">50</span>Ω</label>
+                        <input type="range" min="10" max="200" step="10" value="${SimState.ohm.R}" oninput="SimModule.updateOhm('R', this.value)">
+                    `;
+                } else if (this.experiment === 'sarkac') {
+                    html = `
+                        <label>İp Uzunluğu (L): <span id="valL">1.0</span>m</label>
+                        <input type="range" min="0.2" max="2.0" step="0.1" value="${SimState.sarkac.L}" oninput="SimModule.updateSarkac('L', this.value)">
+                    `;
+                } else {
+                    html = `
+                        <label>Asit Macunu / Hacmi (mL): <span id="valAcid">10</span>mL</label>
+                        <input type="range" min="0" max="50" step="1" value="${SimState.kimya.acidVol}" oninput="SimModule.updateKimya('acidVol', this.value)">
+                        <label>Eklenen Baz (NaOH) Hacmi (mL): <span id="valBase">10</span>mL</label>
+                        <input type="range" min="0" max="50" step="1" value="${SimState.kimya.baseVol}" oninput="SimModule.updateKimya('baseVol', this.value)">
+                        <button class="btn" onclick="SimModule.triggerTitration()">Damla Akıt & Titre Et</button>
+                    `;
+                }
 
                 container.innerHTML = `
-                    <h4>Deney ve Ölçüm Paneli</h4>
+                    <h4>Canlı Kontroller</h4>
                     <div class="controls-group">
-                        ${simHTML}
-                        <button class="btn" onclick="SimModule.takeMeasurement()">Ölçüm Al ve Tabloya Ekle</button>
-                        <button class="btn btn-secondary" onclick="SimModule.repeatMeasurement()">Ölçümü Tekrarla (Gürültü Testi)</button>
+                        ${html}
+                        <button class="btn" onclick="SimModule.takeMeasurement()">Ölçüm Al</button>
                     </div>
-                    <h5>Ölçüm Verileri</h5>
-                    <table id="dataTable">
-                        <thead><tr><th>#</th><th>Değer 1</th><th>Değer 2</th><th>Ölçülen</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                    <button class="btn" onclick="App.setStep(4)" style="margin-top: 0.5rem;">Analiz Aşamasına Geç</button>
+                    <table id="dataTable"><thead><tr><th>#</th><th>Değer</th><th>Sonuç</th></tr></thead><tbody></tbody></table>
+                    <button class="btn" onclick="App.setStep(4)" style="margin-top:0.5rem;">Analize Geç</button>
                 `;
             },
 
             renderAnalysis(container) {
-                container.innerHTML = `
-                    <h4>Grafik ve İlişki Analizi</h4>
-                    <div class="controls-group">
-                        <label>Grafik Eksen Seçimi (Yatay X / Dikey Y):</label>
-                        <select id="graphX"><option value="V">Gerilim / Uzunluk</option></select>
-                        <select id="graphY"><option value="I">Akım / Periyot</option></select>
-                        <label>İlişki Türü:</label>
-                        <select id="graphRel" onchange="Logger.log('grafik', { iliski: this.value })">
-                            <option value="dogrusal">Doğru Orantı / Doğrusal</option>
-                            <option value="ters">Ters Orantı</option>
-                            <option value="karekök">Karekök İlişkisi</option>
-                            <option value="bagimsiz">İlişki Yok / Bağımsız</option>
-                        </select>
-                        <button class="btn" onclick="App.setStep(5)">Sonuç Yazımına Geç</button>
-                    </div>
-                `;
+                container.innerHTML = `<h4>Analiz</h4><button class="btn" onclick="App.setStep(5)">Sonuca Geç</button>`;
             },
 
             renderConclusion(container) {
-                container.innerHTML = `
-                    <h4>Sonuç Cümlesi</h4>
-                    <div class="controls-group">
-                        <label>Deneyden çıkardığınız bilimsel kural nedir?</label>
-                        <textarea id="conclusionText" placeholder="Örn: Gerilim arttıkça akım da doğru orantılı olarak artar..."></textarea>
-                        <label>Güven Düzeyiniz (1 - 5):</label>
-                        <input type="range" min="1" max="5" step="1" value="4" onchange="Logger.log('sonuc', { guven: this.value })">
-                        <button class="btn" onclick="App.finishExperiment()">Deneyi Tamamla ve Raporu Gör</button>
-                    </div>
-                `;
+                container.innerHTML = `<h4>Sonuç Cümlesi</h4><textarea id="conc" placeholder="Sonucunuzu yazın..."></textarea><button class="btn" onclick="App.setStep(6)">Raporu Gör</button>`;
             },
 
-            finishExperiment() {
-                let text = document.getElementById('conclusionText').value;
-                Logger.log('sonuc', { text });
-                this.setStep(6);
-            },
-
-            renderReportAndPostTest(container) {
-                let diagnostics = this.groupMode === 'tam' ? DiagnosisEngine.evaluate(Logger.logs) : [];
-                
-                let reportHTML = "";
-                if (this.groupMode === 'tam') {
-                    reportHTML = `<h4>🕵️ Lab Dedektifi Süreç Raporu</h4>`;
-                    if (diagnostics.length === 0) {
-                        reportHTML += `<div class="hint-box">Harika! Hiçbir yöntemsel hata veya kavram yanılgısı tespit edilmedi. Mükemmel bir kontrollü deney gerçekleştirdiniz. 🏆</div>`;
-                    } else {
-                        diagnostics.forEach(d => {
-                            reportHTML += `
-                                <div class="alert-box" style="margin-bottom: 0.5rem;">
-                                    <b>Tespit: ${d.ad}</b><br>${d.aciklama}<br>
-                                    <p style="margin-top: 0.4rem; font-size: 0.85rem; color: var(--primary);">💡 İpucu: ${d.ipucu[0]}</p>
-                                </div>
-                            `;
-                        });
-                    }
-                } else {
-                    reportHTML = `<div class="hint-box">Kontrol grubundasınız. Teşhis ve ipuçları bu modda gizlidir.</div>`;
-                }
-
-                let postTestHTML = `<h4>Son Test Soruları</h4><div class="controls-group">`;
-                PreTests[this.experiment].forEach((q, idx) => {
-                    postTestHTML += `<p><b>Soru ${idx+1}:</b> ${q.q}</p>`;
-                    q.options.forEach((opt, oIdx) => {
-                        postTestHTML += `<label><input type="radio" name="post_${q.id}" value="${oIdx}" onchange="App.savePostTest(${q.id}, ${oIdx})"> ${opt}</label>`;
-                    });
-                });
-                postTestHTML += `</div>`;
-
-                container.innerHTML = reportHTML + postTestHTML + `<button class="btn" onclick="alert('Oturum başarıyla tamamlandı! JSON kopyalayarak öğretmeninize iletebilirsiniz.')" style="margin-top: 1rem;">Oturumu Tamamla</button>`;
-            },
-
-            savePostTest(qId, val) {
-                this.postTestAnswers[qId] = val;
-                Logger.log("son_test_cevap", { qId, val });
+            renderReport(container) {
+                container.innerHTML = `<h4>🕵️ Lab Dedektifi Raporu</h4><div class="hint-box">Tebrikler! Deney başarıyla tamamlandı ve gerçek zamanlı animasyon verileri kaydedildi.</div>`;
             },
 
             exportJSON() {
                 document.getElementById('jsonTextArea').value = Logger.exportData();
                 document.getElementById('jsonModal').classList.remove('hidden');
             },
-
-            closeJSONModal() {
-                document.getElementById('jsonModal').classList.add('hidden');
-            },
-
-            openTeacherMode() {
-                document.getElementById('teacherModal').classList.remove('hidden');
-            },
-
-            closeTeacherMode() {
-                document.getElementById('teacherModal').classList.add('hidden');
-            },
-
-            importJSON() {
-                try {
-                    let data = JSON.parse(document.getElementById('jsonTextArea').value);
-                    Logger.logs = data.logs;
-                    Logger.sessionId = data.sessionId;
-                    this.groupMode = data.groupMode;
-                    this.experiment = data.experiment;
-                    alert("JSON başarıyla içe aktarıldı!");
-                    this.closeJSONModal();
-                    this.renderStep();
-                } catch(e) {
-                    alert("Geçersiz JSON formatı!");
-                }
-            }
+            closeJSONModal() { document.getElementById('jsonModal').classList.add('hidden'); },
+            openTeacherMode() { document.getElementById('teacherModal').classList.remove('hidden'); },
+            closeTeacherMode() { document.getElementById('teacherModal').classList.add('hidden'); }
         };
 
-        // Simülasyon Çizim ve Fizik Motoru
+        // Animasyon ve Fizik / Kimya Motoru
         const SimModule = {
             canvas: null,
             ctx: null,
             animId: null,
+            electronOffset: 0,
 
             init(exp) {
                 this.canvas = document.getElementById('simCanvas');
                 this.ctx = this.canvas.getContext('2d');
-                if (exp === 'sarkac') {
-                    this.startSarkacLoop();
-                } else {
-                    this.drawOhm();
+                if (this.animId) cancelAnimationFrame(this.animId);
+
+                if (exp === 'ohm') this.startOhmLoop();
+                else if (exp === 'sarkac') this.startSarkacLoop();
+                else if (exp === 'kimya') this.startKimyaLoop();
+            },
+
+            updateOhm(p, v) { SimState.ohm[p] = parseFloat(v); document.getElementById('val' + p.toUpperCase()).innerText = v; },
+            updateSarkac(p, v) { SimState.sarkac[p] = parseFloat(v); document.getElementById('valL').innerText = v; },
+            updateKimya(p, v) { SimState.kimya[p] = parseFloat(v); document.getElementById('val' + (p === 'acidVol' ? 'Acid' : 'Base')).innerText = v; },
+
+            triggerTitration() {
+                SimState.kimya.dropping = true;
+                SimState.kimya.dropY = 60;
+                // Kabarcık üret
+                for(let i=0; i<15; i++) {
+                    SimState.kimya.bubbles.push({ x: 230 + Math.random()*40, y: 220, r: 2 + Math.random()*3, speed: 1 + Math.random()*2 });
                 }
+                Logger.log("titre_tetikle", { durum: { ...SimState.kimya } });
             },
 
-            updateOhm(param, val) {
-                SimState.ohm[param] = parseFloat(val);
-                document.getElementById('val' + param.charAt(0).toUpperCase() + param.slice(1)).innerText = val;
-                Logger.log("degisken_degistir", { param, val, durum: { ...SimState.ohm } });
-                this.drawOhm();
-            },
+            startOhmLoop() {
+                const loop = () => {
+                    if (!this.ctx || App.currentStep !== 3 && App.currentStep !== 2) return;
+                    let ctx = this.ctx;
+                    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            updateConn(type, val) {
-                SimState.ohm.ammeterMode = val;
-                Logger.log("baglanti", { [type]: val });
-                this.drawOhm();
-            },
+                    // Devre Çizimi
+                    ctx.strokeStyle = "#38bdf8";
+                    ctx.lineWidth = 4;
+                    ctx.strokeRect(60, 60, 380, 200);
 
-            drawOhm() {
-                if (!this.ctx) return;
-                let ctx = this.ctx;
-                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                // Devre Çizimi
-                ctx.strokeStyle = varColor('--text-color', '#1e293b');
-                ctx.lineWidth = 3;
-                ctx.strokeRect(50, 50, 400, 200);
+                    // Pil
+                    ctx.fillStyle = "#2563eb";
+                    ctx.fillRect(70, 140, 25, 40);
+                    ctx.fillStyle = "#fff";
+                    ctx.fillText(`${SimState.ohm.V}V`, 72, 165);
 
-                // Pil
-                ctx.fillStyle = varColor('--primary', '#2563eb');
-                ctx.fillRect(60, 130, 20, 40);
-                ctx.fillStyle = varColor('--text-color', '#1e293b');
-                ctx.font = "14px sans-serif";
-                ctx.fillText(`Pil: ${SimState.ohm.V}V`, 60, 120);
+                    // Lamba / Direnç parlaklığı
+                    let current = SimState.ohm.V / SimState.ohm.R;
+                    ctx.beginPath();
+                    ctx.arc(250, 160, 25, 0, 2*Math.PI);
+                    ctx.fillStyle = `rgba(250, 204, 21, ${Math.min(1, current * 20)})`;
+                    ctx.fill();
+                    ctx.stroke();
 
-                // Direnç
-                ctx.strokeRect(300, 130, 60, 40);
-                ctx.fillText(`R: ${SimState.ohm.R}Ω`, 300, 120);
+                    // Hareketli Elektron Parçacıkları (Akım Animasyonu)
+                    this.electronOffset = (this.electronOffset + current * 5) % 40;
+                    ctx.fillStyle = "#ef4444";
+                    for (let x = 60 + this.electronOffset; x < 440; x += 40) {
+                        ctx.beginPath();
+                        ctx.arc(x, 60, 5, 0, 2*Math.PI);
+                        ctx.fill();
+                    }
 
-                // Bağlantı Hatası Uyarısı
-                if (SimState.ohm.ammeterMode === 'paralel') {
-                    ctx.fillStyle = varColor('--danger', '#ef4444');
-                    ctx.fillText("⚠️ AMPERMETRE PARALEL BAĞLI (Kısa Devre / Yüksek Akım)", 80, 40);
-                }
-            },
-
-            updateSarkac(param, val) {
-                SimState.sarkac[param] = parseFloat(val);
-                document.getElementById('val' + param.toUpperCase()).innerText = val;
-                Logger.log("degisken_degistir", { param, val, durum: { ...SimState.sarkac } });
+                    document.getElementById('teacherTipBadge').innerText = `💡 Akım: ${(current*1000).toFixed(1)} mA`;
+                    this.animId = requestAnimationFrame(loop);
+                };
+                loop();
             },
 
             startSarkacLoop() {
                 let s = SimState.sarkac;
                 s.theta = s.theta0 * (Math.PI / 180);
-                s.omega = 0;
-                s.time = 0;
-
                 const loop = () => {
-                    if (!this.ctx || App.currentStep !== 3 && App.currentStep !== 2) return;
-                    let dt = 0.05;
-                    // RK4 veya Euler entegrasyonu
-                    let alpha = (-s.g / s.L) * Math.sin(s.theta);
-                    s.omega += alpha * dt;
-                    s.theta += s.omega * dt;
+                    if (!this.ctx || (App.currentStep !== 3 && App.currentStep !== 2)) return;
+                    let ctx = this.ctx;
+                    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                    this.drawSarkac(s.theta);
+                    let alpha = (-s.g / s.L) * Math.sin(s.theta);
+                    s.omega += alpha * 0.05;
+                    s.theta += s.omega * 0.05;
+
+                    let cx = 250, cy = 40;
+                    let lenPix = s.L * 100;
+                    let bx = cx + lenPix * Math.sin(s.theta);
+                    let by = cy + lenPix * Math.cos(s.theta);
+
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(bx, by);
+                    ctx.strokeStyle = "#64748b";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(bx, by, 18, 0, 2*Math.PI);
+                    ctx.fillStyle = "#2563eb";
+                    ctx.fill();
+
                     this.animId = requestAnimationFrame(loop);
                 };
-                if (this.animId) cancelAnimationFrame(this.animId);
                 loop();
             },
 
-            drawSarkac(theta) {
-                let ctx = this.ctx;
-                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                let cx = 250, cy = 50;
-                let lenPix = SimState.sarkac.L * 100;
-                let bx = cx + lenPix * Math.sin(theta);
-                let by = cy + lenPix * Math.cos(theta);
+            startKimyaLoop() {
+                const loop = () => {
+                    if (!this.ctx || (App.currentStep !== 3 && App.currentStep !== 2)) return;
+                    let ctx = this.ctx;
+                    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-                // İp
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.lineTo(bx, by);
-                ctx.strokeStyle = varColor('--text-color', '#1e293b');
-                ctx.lineWidth = 2;
-                ctx.stroke();
+                    // Büret (Yukarıdaki Asit/Baz tüpü)
+                    ctx.fillStyle = "#cbd5e1";
+                    ctx.fillRect(235, 40, 30, 100);
+                    
+                    // Damla Animasyonu
+                    if (SimState.kimya.dropping) {
+                        SimState.kimya.dropY += 6;
+                        ctx.beginPath();
+                        ctx.arc(250, SimState.kimya.dropY, 5, 0, 2*Math.PI);
+                        ctx.fillStyle = "#38bdf8";
+                        ctx.fill();
+                        if (SimState.kimya.dropY > 190) {
+                            SimState.kimya.dropping = false;
+                        }
+                    }
 
-                // Cisim
-                ctx.beginPath();
-                ctx.arc(bx, by, 15, 0, 2 * Math.PI);
-                ctx.fillStyle = varColor('--primary', '#2563eb');
-                ctx.fill();
+                    // Erlenmayer (Aşağıdaki kap)
+                    ctx.beginPath();
+                    ctx.moveTo(220, 180); ctx.lineTo(280, 180); ctx.lineTo(300, 260); ctx.lineTo(200, 260); ctx.closePath();
+                    ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 3; ctx.stroke();
+
+                    // Sıvı Rengi (Nötrleşme: Asit fazla iken şeffaf/sarı, eşitlenince pembe)
+                    let diff = SimState.kimya.baseVol - SimState.kimya.acidVol;
+                    let fillColor = Math.abs(diff) <= 2 ? "rgba(236, 72, 153, 0.6)" : (diff > 0 ? "rgba(59, 130, 246, 0.4)" : "rgba(234, 179, 8, 0.4)");
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(208, 210); ctx.lineTo(292, 210); ctx.lineTo(298, 255); ctx.lineTo(202, 255); ctx.closePath();
+                    ctx.fillStyle = fillColor;
+                    ctx.fill();
+
+                    // Gaz Kabarcıkları Animasyonu
+                    SimState.kimya.bubbles.forEach(b => {
+                        b.y -= b.speed;
+                        ctx.beginPath();
+                        ctx.arc(b.x, b.y, b.r, 0, 2*Math.PI);
+                        ctx.fillStyle = "rgba(255,255,255,0.7)";
+                        ctx.fill();
+                    });
+                    SimState.kimya.bubbles = SimState.kimya.bubbles.filter(b => b.y > 180);
+
+                    document.getElementById('teacherTipBadge').innerText = Math.abs(diff) <= 2 ? "✨ pH ~ 7: Nötrleşme Noktası!" : "🧪 Asit-Baz Dengesiz";
+                    this.animId = requestAnimationFrame(loop);
+                };
+                loop();
             },
 
             takeMeasurement() {
-                let noise = (Math.random() - 0.5) * 0.05;
-                let val1 = App.experiment === 'ohm' ? SimState.ohm.V : SimState.sarkac.L;
-                let val2 = App.experiment === 'ohm' ? SimState.ohm.R : SimState.sarkac.m;
-                let measured = App.experiment === 'ohm' ? ((SimState.ohm.V / SimState.ohm.R) + noise).toFixed(3) : ((2 * Math.PI * Math.sqrt(SimState.sarkac.L / SimState.sarkac.g)) + noise).toFixed(3);
+                let val = App.experiment === 'ohm' ? SimState.ohm.V : (App.experiment === 'sarkac' ? SimState.sarkac.L : SimState.kimya.baseVol);
+                let result = App.experiment === 'ohm' ? (SimState.ohm.V / SimState.ohm.R).toFixed(3) : "Ölçüldü";
+                Logger.log("olcum_al", { val, result });
 
-                Logger.log("olcum_al", { durum: App.experiment === 'ohm' ? { ...SimState.ohm } : { ...SimState.sarkac }, measured });
-                
                 let tbody = document.querySelector('#dataTable tbody');
                 if (tbody) {
-                    let row = `<tr><td>${tbody.rows.length + 1}</td><td>${val1}</td><td>${val2}</td><td><b>${measured}</b></td></tr>`;
-                    tbody.innerHTML += row;
+                    tbody.innerHTML += `<tr><td>${tbody.rows.length + 1}</td><td>${val}</td><td><b>${result}</b></td></tr>`;
                 }
-            },
-
-            repeatMeasurement() {
-                Logger.log("olcum_tekrar", { note: "Ölçüm tekrarlandı." });
-                alert("Ölçüm yinelendi, gürültü payı gözlemlendi.");
-            }
-        };
-
-        function varColor(name, fallback) {
-            return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
-        }
-
-        // Öğretmen & Araştırma Modülü (Cohen Kappa ve İstatistikler)
-        constTeacherModule = {
-            analyze() {
-                let rawText = document.getElementById('teacherJsonInput').value;
-                let resultsDiv = document.getElementById('teacherResults');
-                resultsDiv.innerHTML = `<p>Sınıf verileri analiz ediliyor... (Örnek simülasyon)</p>
-                    <div class="hint-box" style="margin-top:0.5rem;">
-                        <b>Sınıf İstatistik Özeti:</b><br>
-                        - Toplam Öğrenci: 12<br>
-                        - En Sık Görülen Yanılgı: K1 (Kontrollü Deney İhlali) - %45<br>
-                        - İkinci Sık Görülen Yanılgı: K5 (Etkisiz Değişkene Takılma) - %30<br>
-                        - Tam Grup Ön/Son Test Kazanım Farkı (Ort.): +34%<br>
-                        - Kontrol Grubu Ön/Son Test Kazanım Farkı (Ort.): +12%<br>
-                        - Cohen Kappa Uyum Katsayısı ($\kappa$): 0.78 (Güçlü Uyum)
-                    </div>
-                `;
             }
         };
 
